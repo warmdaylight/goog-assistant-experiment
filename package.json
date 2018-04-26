@@ -1,0 +1,15 @@
+{
+  "name": "aunjai-fullfillment",
+  "version": "0.0.1",
+  "description": "fullfillment experiment for dialogflow agent",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Settasit Chitphentom",
+  "license": "ISC",
+  "dependencies": {
+    "dialogflow-fulfillment": "^0.3.0-beta.2",
+    "express": "^4.16.3"
+  }
+}
