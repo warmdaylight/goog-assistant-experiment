@@ -1,8 +1,49 @@
-const express = require('express')
+const processor = require('./processor')
+const express = require('express'),
+    bodyParser = require('body-parser')
 const { WebhookClient } = require('dialogflow-fulfillment')
 
-const app = express()
 
-app.get('/', (req, res) => res.send({"msg": "Hello world!"}))
 
-app.listen(4200, () => console.log("Example application is running on port 4200"))
+// HTTP
+const http = require('http')
+
+const app = express(bodyParser.json())
+
+app.use(bodyParser.json())
+
+app.get('/', (request, response) => response.send({"msg": "Hello world!"}))
+
+app.post('/', (req, res) => {
+    console.log("Request Header: " + JSON.stringify(req.headers))
+    console.log("Request Body: " + JSON.stringify(req.body))
+
+    const agent = new WebhookClient({req, res})
+
+    function welcome(agent) {
+        agent.add(`welcome to my agent`)
+    }
+
+    function fallback(agent) {
+        agent.add(`I don't understand`)
+        agent.add(`I am sorry. Can you repeat again`)
+    }
+
+    let intentMap = new Map()
+
+    intentMap.set('Default Welcome Intent', welcome)
+    intentMap.set('Default Fallback Intent', fallback)
+    
+    agent.handleRequest(intentMap)
+})
+
+http.createServer(app).listen(4200, (error) => {
+    if (error) {
+        console.log(error)
+    }
+    else {
+        console.log("listening at port 4200")
+    }
+})
+
+
