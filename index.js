@@ -3,8 +3,6 @@ const express = require('express'),
     bodyParser = require('body-parser')
 const { WebhookClient } = require('dialogflow-fulfillment')
 
-
-
 // HTTP
 const http = require('http')
 
@@ -18,7 +16,9 @@ app.post('/', (req, res) => {
     console.log("Request Header: " + JSON.stringify(req.headers))
     console.log("Request Body: " + JSON.stringify(req.body))
 
-    const agent = new WebhookClient({req, res})
+    req = processor(req)
+
+    const agent = new WebhookClient({request: req, response: res})
 
     function welcome(agent) {
         agent.add(`welcome to my agent`)
@@ -45,5 +45,7 @@ http.createServer(app).listen(4200, (error) => {
         console.log("listening at port 4200")
     }
 })
+
+// HTTPS goes here :)
 
 
