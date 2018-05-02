@@ -3,6 +3,8 @@ const express = require('express'),
     bodyParser = require('body-parser')
 const { WebhookClient } = require('dialogflow-fulfillment')
 
+const PORT = process.env.PORT || 4200
+
 // HTTP
 const http = require('http')
 
@@ -37,12 +39,12 @@ app.post('/', (req, res) => {
     agent.handleRequest(intentMap)
 })
 
-app.listen(4200, (error) => {
+app.listen(PORT, (error) => {
     if (error) {
         console.log(error)
     }
     else {
-        console.log("listening at port 4200")
+        console.log(`listening at port ${PORT}`)
     }
 })
 
