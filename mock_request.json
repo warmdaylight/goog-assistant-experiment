@@ -28,7 +28,7 @@
     ],
     "intent": {
       "name": "projects/your-agents-project-id/agent/intents/29bcd7f8-f717-4261-a8fd-2d3e451b8af8",
-      "displayName": "Matched Intent Name"
+      "displayName": "Default Welcome Intent"
     },
     "intentDetectionConfidence": 1,
     "diagnosticInfo": {},

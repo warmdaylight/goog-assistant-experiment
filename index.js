@@ -37,7 +37,7 @@ app.post('/', (req, res) => {
     agent.handleRequest(intentMap)
 })
 
-http.createServer(app).listen(4200, (error) => {
+app.listen(4200, (error) => {
     if (error) {
         console.log(error)
     }
