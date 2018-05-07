@@ -6,8 +6,6 @@ const { Card, Suggestion } = require('dialogflow-fulfillment')
 
 const PORT = process.env.PORT || 4200
 
-// HTTP
-const http = require('http')
 
 const app = express(bodyParser.json())
 
