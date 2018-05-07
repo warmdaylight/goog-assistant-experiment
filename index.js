@@ -41,12 +41,16 @@ app.post('/', (req, res) => {
         }))
     }
 
+    function onTopHandler(agent) {
+        agent.add(`<speak>สามารถเลือกแพกเกจเสริมได้ที่แอป My <say-as interpret-as="verbatim">AIS</say-as> ครับ</speak>`)
+    }
+
     let intentMap = new Map()
 
     intentMap.set('Default Welcome Intent', welcome)
     intentMap.set('Default Fallback Intent', fallback)
     intentMap.set('ir:roaming', sim2fly)
-    
+    intentMap.set('on-top', onTopHandler)
     agent.handleRequest(intentMap)
 })
 
