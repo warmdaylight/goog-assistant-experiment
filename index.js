@@ -1,11 +1,10 @@
-const { SimpleResponse } = require('dialogflow-fulfillment/node_modules/actions-on-google/dist/service/actionssdk');
+const { SimpleResponse, Carousel, Image } = require('dialogflow-fulfillment/node_modules/actions-on-google/dist/service/actionssdk');
 
 const processor = require('./processor')
 const express = require('express'),
     bodyParser = require('body-parser')
 const { WebhookClient } = require('dialogflow-fulfillment')
 const { Card, Suggestion } = require('dialogflow-fulfillment')
-const { List, Image } = require('actions-on-google')
 
 const https = require('https')
 
@@ -18,7 +17,7 @@ app.use(bodyParser.json())
 
 app.get('/', (request, response) => {
     https.get({
-        host: '10.137.28.40',
+        host: '110.49.202.87',
         port: 8443,
         path: '/GoogleAssistant/GetCurrentBalacnce/66932780014',
         method: 'GET',
@@ -65,6 +64,24 @@ app.post('/', (req, res) => {
         conv.ask(new SimpleResponse({
             speech: '<speak>อุ่นใจแนะนำ Sim<sub alias="ทู">2</sub>Fly ราคาประหยัดครับ</speak>',
             text: 'อุ่นใจแนะนำ Sim2Fly ราคาประหยัดครับ ✈️'
+        }))
+        conv.ask(new Carousel({
+            items: {
+                'Select_399': {
+                    title: `Sim 2 Fly 399`,
+                    description: `เอเชีย, ออสเตรเลีย 🗼`,
+                    image: new Image({
+                        url: simImg[0], alt: 'Sim2Fly 399'
+                    })
+                },
+                'Select_899': {
+                    title: `Sim 2 Fly 899`,
+                    description: "ยุโรป อเมริกา และอื่น 🌎",
+                    image: new Image({
+                        url: simImg[1], alt: 'Sim2Fly 899'
+                    })
+                }
+            }
         }))
         agent.add(conv)
     }
