@@ -37,6 +37,29 @@ app.get('/', (request, response) => {
     })
 })
 
+app.get('/top-seller', (request, response) => {
+    https.get({
+        host: '110.49.202.87',
+        port: 8443,
+        path: '/GoogleAssistant/GetMainMenu',
+        method: 'GET',
+        rejectUnauthorized: false,
+        agent: false,
+    }, (res) => {
+        let data = ''
+
+        res.on('data', (x) => {data += x})
+
+        res.on('end', () => {
+            response.send(JSON.parse(data))
+            response.end()
+        })
+    }).on('error', (e) => {
+        console.log(e)
+        response.send({error: e})
+    })
+})
+
 app.post('/', (req, res) => {
     console.log("Request Header: " + JSON.stringify(req.headers))
     console.log("Request Body: " + JSON.stringify(req.body))
