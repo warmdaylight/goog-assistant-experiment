@@ -6,7 +6,7 @@ const express = require('express'),
 const { WebhookClient } = require('dialogflow-fulfillment')
 const { Card, Suggestion } = require('dialogflow-fulfillment')
 
-const https = require('https')
+const https = require('./synchttps')
 
 const PORT = process.env.PORT || 4200
 
@@ -15,30 +15,21 @@ const app = express(bodyParser.json())
 
 app.use(bodyParser.json())
 
-app.get('/', (request, response) => {
-    https.get({
+app.get('/', async (request, response) => {
+    let retJSON = await https.getJSON({
         host: '110.49.202.87',
         port: 8443,
         path: '/GoogleAssistant/GetCurrentBalacnce/66932780014',
         method: 'GET',
         rejectUnauthorized: false,
         agent: false,
-    }, (res) => {
-        let data = ''
-
-        res.on('data', (x) => {data += x})
-
-        res.on('end', () => {
-            response.send(JSON.parse(data))
-            response.end()
-        })
-    }).on('error', (e) => {
-        console.log(e)
     })
+    response.send(retJSON)
+    response.end()
 })
 
-app.get('/top-seller', (request, response) => {
-    https.get({
+app.get('/top-seller', async (request, response) => {
+    await https.get({
         host: '110.49.202.87',
         port: 8443,
         path: '/GoogleAssistant/GetMainMenu',
@@ -114,33 +105,26 @@ app.post('/', (req, res) => {
         agent.add(new Suggestion(`Open MY AIS`))
     }
 
-    function optionsHandlers(agent) {
-        https.get({
+    async function balanceHandler(agent) {
+        let retJSON = await https.getJSON({
             host: '110.49.202.87',
             port: 8443,
             path: '/GoogleAssistant/GetCurrentBalacnce/66932780014',
             method: 'GET',
             rejectUnauthorized: false,
             agent: false,
-        }, (res) => {
-            let data = ''
-    
-            res.on('data', (x) => {data += x})
-    
-            res.on('end', () => {
-                agent.add(JSON.parse(data)['balance'])
-            })
-        }).on('error', (e) => {
-            console.log(e)
         })
+        agent.add(`คุณมียอดเงินคงเหลือ ${retJSON.balance} บาท สนใจเติมเงินมั้ยครับ`)
+        agent.add(new Suggestion(`Open MY AIS`))
     }
 
     let intentMap = new Map()
 
-    intentMap.set('Default Welcome Intent', optionsHandlers)
+    // intentMap.set('Default Welcome Intent', welcome)
     intentMap.set('Default Fallback Intent', fallback)
     intentMap.set('ir:roaming', sim2fly)
     intentMap.set('on-top', onTopHandler)
+    intentMap.set('top-up', balanceHandler)
     agent.handleRequest(intentMap)
 })
 
