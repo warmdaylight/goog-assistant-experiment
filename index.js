@@ -115,12 +115,29 @@ app.post('/', (req, res) => {
     }
 
     function optionsHandlers(agent) {
-        
+        https.get({
+            host: '110.49.202.87',
+            port: 8443,
+            path: '/GoogleAssistant/GetCurrentBalacnce/66932780014',
+            method: 'GET',
+            rejectUnauthorized: false,
+            agent: false,
+        }, (res) => {
+            let data = ''
+    
+            res.on('data', (x) => {data += x})
+    
+            res.on('end', () => {
+                agent.add(JSON.parse(data)['balance'])
+            })
+        }).on('error', (e) => {
+            console.log(e)
+        })
     }
 
     let intentMap = new Map()
 
-    intentMap.set('Default Welcome Intent', welcome)
+    intentMap.set('Default Welcome Intent', optionsHandlers)
     intentMap.set('Default Fallback Intent', fallback)
     intentMap.set('ir:roaming', sim2fly)
     intentMap.set('on-top', onTopHandler)
